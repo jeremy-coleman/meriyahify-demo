@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "sourceMap": false,
+        "declaration": false,
+        "module": "commonjs",
+        "target": "esnext",
+        "moduleResolution": "node",
+        "jsx": "react",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck":true,
+        "resolveJsonModule": false,
+        "noImplicitAny": false,
+        "outDir": "dist",
+        "baseUrl": ".",
+        "paths": {
+         "*": ["*","src/*","packages/*"],
+        "@coglite/*": ["src/packages/*"]
+        },
+        "lib": ["dom", "es5", "scripthost", "es2017", "esnext", "dom.iterable"]
+    },
+    "include": ["src", "tools"],
+    "exclude": ["node_modules", "lib"]
+}
