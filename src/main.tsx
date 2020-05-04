@@ -23,10 +23,9 @@ import {
 
 import "./main.css";
 
+//asdf = 2324d;
 //just for the error demo
-let x: number = 'hi'
-
-//require("./main.css")
+let x: number = 'not a number'
 
 const GITHUB_URL = "https://github.com/dkozar/raycast-dom";
 const STARS_URL = GITHUB_URL + "/stargazers";

@@ -2,7 +2,7 @@
     "compilerOptions": {
         "sourceMap": false,
         "declaration": false,
-        "module": "commonjs",
+        "module": "esnext",
         "target": "esnext",
         "moduleResolution": "node",
         "jsx": "react",
@@ -15,11 +15,7 @@
         "noImplicitAny": false,
         "outDir": "dist",
         "baseUrl": ".",
-        "paths": {
-         "*": ["*","src/*","packages/*"],
-        "@coglite/*": ["src/packages/*"]
-        },
-        "lib": ["dom", "es5", "scripthost", "es2017", "esnext", "dom.iterable"]
+        "lib": ["dom", "esnext"]
     },
     "include": ["src", "tools"],
     "exclude": ["node_modules", "lib"]

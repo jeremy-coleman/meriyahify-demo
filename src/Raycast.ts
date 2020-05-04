@@ -1,5 +1,5 @@
-
-const partial = (func, ...boundArgs) => (...remainingArgs) => func(...boundArgs, ...remainingArgs);
+const partial = (func, ...boundArgs) => (...remainingArgs) =>
+  func(...boundArgs, ...remainingArgs);
 
 function findLastValue(iterable = new Array(0), predicate) {
   var index = iterable.length;
@@ -27,7 +27,6 @@ export function equalID(id: HTMLElement["id"], element: HTMLElement) {
   return id === element.id;
 }
 
-
 class DomUtil {
   static buildPath(parentElement, childElement) {
     var path: Node[] = [];
@@ -35,17 +34,21 @@ class DomUtil {
 
     path.push(childElement);
 
-    if (childElement === parentElement) {return path;}
+    if (childElement === parentElement) {
+      return path;
+    }
 
     node = childElement.parentNode;
 
     while (node != null) {
       path.push(node);
-      if (node === parentElement) {return path;}
+      if (node === parentElement) {
+        return path;
+      }
       node = node.parentNode;
     }
     //not a real path
-    return false; 
+    return false;
   }
 }
 
@@ -77,14 +80,14 @@ export class EmitterBase {
   disconnect(slot) {
     var len = this.slots.length;
 
-    remove(this.slots, function(subscriber) {
+    remove(this.slots, function (subscriber) {
       return subscriber === slot;
     });
     this.handleSubscription(len, this.slots.length);
   }
 
   isConnected(slot) {
-    return this.slots.some(function(subscriber) {
+    return this.slots.some(function (subscriber) {
       return subscriber === slot;
     });
   }
@@ -116,7 +119,7 @@ export class EmitterBase {
   emit(handlerName, ray) {
     var handler;
 
-    this.slots.forEach(function(slot) {
+    this.slots.forEach(function (slot) {
       if (slot) {
         // might be undefined because firing some handlers could disconnect others (recursion)
         handler = slot[handlerName];
@@ -128,7 +131,9 @@ export class EmitterBase {
         }
 
         // TODO: if slot connected providing the 'elements' array, check for intersections of ray and any of the element. Emit only when intersection exists.
-        if (handler) {handler(ray);}
+        if (handler) {
+          handler(ray);
+        }
       }
     });
   }
@@ -161,7 +166,6 @@ const ON_MOUSE_OVER = ["mouseover", "onMouseOver"],
   ON_RESIZE = ["resize", "onResize"],
   ON_SCROLL = ["scroll", "onScroll"];
 
-
 /**Checks whether the substring is present within element ID*/
 export function evaluateID(sub: string, element: HTMLElement) {
   var id = element.id;
@@ -173,7 +177,7 @@ type MousePosition = {
   y: number;
 };
 
-type Event = KeyboardEvent & MouseEvent & TouchEvent
+type Event = KeyboardEvent & MouseEvent & TouchEvent;
 /** Ray(Event) emitted by an emitter */
 export class Ray {
   e: Event;
@@ -190,7 +194,11 @@ export class Ray {
    * @optonal @param root {HTMLElement}  Root element (optional, defaults to document)
    * @optional @param position Position in screen coordinates (optional)
    */
-  constructor(e: Event, root?: HTMLElement, position?: {x: number; y: number}) {
+  constructor(
+    e: Event,
+    root?: HTMLElement,
+    position?: { x: number; y: number }
+  ) {
     this.e = e;
     this.target = e.target;
     this.root = root || document;
@@ -199,15 +207,21 @@ export class Ray {
 
   /**Gets the reversed (bottom up) and returns Array of DOM nodes*/
   _getPath() {
-    if (!this.path) {this.path = DomUtil.buildPath(this.root, this.target);}
+    if (!this.path) {
+      this.path = DomUtil.buildPath(this.root, this.target);
+    }
     return this.path as Node[];
   }
 
   /** Gets intersections (bottom-up) and returns an Array of DOM nodes */
   getIntersections(topDown?) {
     const bottomUpPath = this._getPath();
-    if (!topDown) {return bottomUpPath;}
-    if (!this.topDownPath) {this.topDownPath = bottomUpPath.reverse();}
+    if (!topDown) {
+      return bottomUpPath;
+    }
+    if (!this.topDownPath) {
+      this.topDownPath = bottomUpPath.reverse();
+    }
     return this.topDownPath;
   }
 
@@ -312,29 +326,105 @@ export class Emitter extends EmitterBase {
     super();
 
     // document
-    this[ON_MOUSE_OVER[1]] = this.createRayAndEmit.bind(this, ON_MOUSE_OVER[1], document);
-    this[ON_MOUSE_OUT[1]] = this.createRayAndEmit.bind(this, ON_MOUSE_OUT[1], document);
-    this[ON_MOUSE_ENTER[1]] = this.createRayAndEmit.bind(this, ON_MOUSE_ENTER[1], document);
-    this[ON_MOUSE_LEAVE[1]] = this.createRayAndEmit.bind(this, ON_MOUSE_LEAVE[1], document);
-    this[ON_MOUSE_DOWN[1]] = this.createRayAndEmit.bind(this, ON_MOUSE_DOWN[1], document);
-    this[ON_MOUSE_UP[1]] = this.createRayAndEmit.bind(this, ON_MOUSE_UP[1], document);
-    this[ON_MOUSE_MOVE[1]] = this.createRayAndEmit.bind(this, ON_MOUSE_MOVE[1], document);
+    this[ON_MOUSE_OVER[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_MOUSE_OVER[1],
+      document
+    );
+    this[ON_MOUSE_OUT[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_MOUSE_OUT[1],
+      document
+    );
+    this[ON_MOUSE_ENTER[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_MOUSE_ENTER[1],
+      document
+    );
+    this[ON_MOUSE_LEAVE[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_MOUSE_LEAVE[1],
+      document
+    );
+    this[ON_MOUSE_DOWN[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_MOUSE_DOWN[1],
+      document
+    );
+    this[ON_MOUSE_UP[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_MOUSE_UP[1],
+      document
+    );
+    this[ON_MOUSE_MOVE[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_MOUSE_MOVE[1],
+      document
+    );
     this[ON_CLICK[1]] = this.createRayAndEmit.bind(this, ON_CLICK[1], document);
-    this[ON_DOUBLE_CLICK[1]] = this.createRayAndEmit.bind(this, ON_DOUBLE_CLICK[1], document);
-    this[ON_CONTEXT_MENU[1]] = this.createRayAndEmit.bind(this, ON_CONTEXT_MENU[1], document);
-    this[ON_TOUCH_START[1]] = this.createRayAndEmit.bind(this, ON_TOUCH_START[1], document);
-    this[ON_TOUCH_END[1]] = this.createRayAndEmit.bind(this, ON_TOUCH_END[1], document);
-    this[ON_TOUCH_MOVE[1]] = this.createRayAndEmit.bind(this, ON_TOUCH_MOVE[1], document);
-    this[ON_TOUCH_CANCEL[1]] = this.createRayAndEmit.bind(this, ON_TOUCH_CANCEL[1], document);
-    this[ON_MOUSE_OVER[1]] = this.createRayAndEmit.bind(this, ON_MOUSE_OVER[1], document);
-    this[ON_MOUSE_OVER[1]] = this.createRayAndEmit.bind(this, ON_MOUSE_OVER[1], document);
-    this[ON_CHANGE[1]] = this.createRayAndEmit.bind(this, ON_CHANGE[1], document);
+    this[ON_DOUBLE_CLICK[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_DOUBLE_CLICK[1],
+      document
+    );
+    this[ON_CONTEXT_MENU[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_CONTEXT_MENU[1],
+      document
+    );
+    this[ON_TOUCH_START[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_TOUCH_START[1],
+      document
+    );
+    this[ON_TOUCH_END[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_TOUCH_END[1],
+      document
+    );
+    this[ON_TOUCH_MOVE[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_TOUCH_MOVE[1],
+      document
+    );
+    this[ON_TOUCH_CANCEL[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_TOUCH_CANCEL[1],
+      document
+    );
+    this[ON_MOUSE_OVER[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_MOUSE_OVER[1],
+      document
+    );
+    this[ON_MOUSE_OVER[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_MOUSE_OVER[1],
+      document
+    );
+    this[ON_CHANGE[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_CHANGE[1],
+      document
+    );
     this[ON_INPUT[1]] = this.createRayAndEmit.bind(this, ON_INPUT[1], document);
-    this[ON_SUBMIT[1]] = this.createRayAndEmit.bind(this, ON_SUBMIT[1], document);
+    this[ON_SUBMIT[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_SUBMIT[1],
+      document
+    );
     this[ON_FOCUS[1]] = this.createRayAndEmit.bind(this, ON_FOCUS[1], document);
     this[ON_BLUR[1]] = this.createRayAndEmit.bind(this, ON_BLUR[1], document);
-    this[ON_KEY_DOWN[1]] = this.createRayAndEmit.bind(this, ON_KEY_DOWN[1], document);
-    this[ON_KEY_UP[1]] = this.createRayAndEmit.bind(this, ON_KEY_UP[1], document);
+    this[ON_KEY_DOWN[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_KEY_DOWN[1],
+      document
+    );
+    this[ON_KEY_UP[1]] = this.createRayAndEmit.bind(
+      this,
+      ON_KEY_UP[1],
+      document
+    );
     this[ON_PRESS[1]] = this.createRayAndEmit.bind(this, ON_PRESS[1], document);
     this[ON_WHEEL[1]] = this.createRayAndEmit.bind(this, ON_WHEEL[1], document);
 
@@ -354,20 +444,68 @@ export class Emitter extends EmitterBase {
   browserSubscribe() {
     // TODO: optimize, so we add listeners only for events actually used by subscribers (keep each event type count)
     // TODO: also, allow specifying the capture/bubble phase per handler
-    document.body.addEventListener(ON_MOUSE_OVER[0], this[ON_MOUSE_OVER[1]], false);
-    document.body.addEventListener(ON_MOUSE_OUT[0], this[ON_MOUSE_OUT[1]], false);
-    document.body.addEventListener(ON_MOUSE_ENTER[0], this[ON_MOUSE_ENTER[1]], false);
-    document.body.addEventListener(ON_MOUSE_LEAVE[0], this[ON_MOUSE_LEAVE[1]], false);
-    document.body.addEventListener(ON_MOUSE_DOWN[0], this[ON_MOUSE_DOWN[1]], false);
+    document.body.addEventListener(
+      ON_MOUSE_OVER[0],
+      this[ON_MOUSE_OVER[1]],
+      false
+    );
+    document.body.addEventListener(
+      ON_MOUSE_OUT[0],
+      this[ON_MOUSE_OUT[1]],
+      false
+    );
+    document.body.addEventListener(
+      ON_MOUSE_ENTER[0],
+      this[ON_MOUSE_ENTER[1]],
+      false
+    );
+    document.body.addEventListener(
+      ON_MOUSE_LEAVE[0],
+      this[ON_MOUSE_LEAVE[1]],
+      false
+    );
+    document.body.addEventListener(
+      ON_MOUSE_DOWN[0],
+      this[ON_MOUSE_DOWN[1]],
+      false
+    );
     document.body.addEventListener(ON_MOUSE_UP[0], this[ON_MOUSE_UP[1]], false);
-    document.body.addEventListener(ON_MOUSE_MOVE[0], this[ON_MOUSE_MOVE[1]], false);
+    document.body.addEventListener(
+      ON_MOUSE_MOVE[0],
+      this[ON_MOUSE_MOVE[1]],
+      false
+    );
     document.body.addEventListener(ON_CLICK[0], this[ON_CLICK[1]], false);
-    document.body.addEventListener(ON_DOUBLE_CLICK[0], this[ON_DOUBLE_CLICK[1]], false);
-    document.body.addEventListener(ON_CONTEXT_MENU[0], this[ON_CONTEXT_MENU[1]], false);
-    document.body.addEventListener(ON_TOUCH_START[0], this[ON_TOUCH_START[1]], false);
-    document.body.addEventListener(ON_TOUCH_END[0], this[ON_TOUCH_END[1]], false);
-    document.body.addEventListener(ON_TOUCH_MOVE[0], this[ON_TOUCH_MOVE[1]], false);
-    document.body.addEventListener(ON_TOUCH_CANCEL[0], this[ON_TOUCH_CANCEL[1]], false);
+    document.body.addEventListener(
+      ON_DOUBLE_CLICK[0],
+      this[ON_DOUBLE_CLICK[1]],
+      false
+    );
+    document.body.addEventListener(
+      ON_CONTEXT_MENU[0],
+      this[ON_CONTEXT_MENU[1]],
+      false
+    );
+    document.body.addEventListener(
+      ON_TOUCH_START[0],
+      this[ON_TOUCH_START[1]],
+      false
+    );
+    document.body.addEventListener(
+      ON_TOUCH_END[0],
+      this[ON_TOUCH_END[1]],
+      false
+    );
+    document.body.addEventListener(
+      ON_TOUCH_MOVE[0],
+      this[ON_TOUCH_MOVE[1]],
+      false
+    );
+    document.body.addEventListener(
+      ON_TOUCH_CANCEL[0],
+      this[ON_TOUCH_CANCEL[1]],
+      false
+    );
     document.body.addEventListener(ON_CHANGE[0], this[ON_CHANGE[1]], false);
     document.body.addEventListener(ON_INPUT[0], this[ON_INPUT[1]], false);
     document.body.addEventListener(ON_SUBMIT[0], this[ON_SUBMIT[1]], false);
@@ -385,18 +523,36 @@ export class Emitter extends EmitterBase {
   browserUnsubscribe() {
     document.body.removeEventListener(ON_MOUSE_OVER[0], this[ON_MOUSE_OVER[1]]);
     document.body.removeEventListener(ON_MOUSE_OUT[0], this[ON_MOUSE_OUT[1]]);
-    document.body.removeEventListener(ON_MOUSE_ENTER[0], this[ON_MOUSE_ENTER[1]]);
-    document.body.removeEventListener(ON_MOUSE_LEAVE[0], this[ON_MOUSE_LEAVE[1]]);
+    document.body.removeEventListener(
+      ON_MOUSE_ENTER[0],
+      this[ON_MOUSE_ENTER[1]]
+    );
+    document.body.removeEventListener(
+      ON_MOUSE_LEAVE[0],
+      this[ON_MOUSE_LEAVE[1]]
+    );
     document.body.removeEventListener(ON_MOUSE_DOWN[0], this[ON_MOUSE_DOWN[1]]);
     document.body.removeEventListener(ON_MOUSE_UP[0], this[ON_MOUSE_UP[1]]);
     document.body.removeEventListener(ON_MOUSE_MOVE[0], this[ON_MOUSE_MOVE[1]]);
     document.body.removeEventListener(ON_CLICK[0], this[ON_CLICK[1]]);
-    document.body.removeEventListener(ON_DOUBLE_CLICK[0], this[ON_DOUBLE_CLICK[1]]);
-    document.body.removeEventListener(ON_CONTEXT_MENU[0], this[ON_CONTEXT_MENU[1]]);
-    document.body.removeEventListener(ON_TOUCH_START[0], this[ON_TOUCH_START[1]]);
+    document.body.removeEventListener(
+      ON_DOUBLE_CLICK[0],
+      this[ON_DOUBLE_CLICK[1]]
+    );
+    document.body.removeEventListener(
+      ON_CONTEXT_MENU[0],
+      this[ON_CONTEXT_MENU[1]]
+    );
+    document.body.removeEventListener(
+      ON_TOUCH_START[0],
+      this[ON_TOUCH_START[1]]
+    );
     document.body.removeEventListener(ON_TOUCH_END[0], this[ON_TOUCH_END[1]]);
     document.body.removeEventListener(ON_TOUCH_MOVE[0], this[ON_TOUCH_MOVE[1]]);
-    document.body.removeEventListener(ON_TOUCH_CANCEL[0], this[ON_TOUCH_CANCEL[1]]);
+    document.body.removeEventListener(
+      ON_TOUCH_CANCEL[0],
+      this[ON_TOUCH_CANCEL[1]]
+    );
     document.body.removeEventListener(ON_CHANGE[0], this[ON_CHANGE[1]]);
     document.body.removeEventListener(ON_INPUT[0], this[ON_INPUT[1]]);
     document.body.removeEventListener(ON_SUBMIT[0], this[ON_SUBMIT[1]]);
@@ -449,7 +605,6 @@ export class EmitterPlug extends EmitterBase {
     this.handlers = undefined;
   }
 
-
   handleSubscription(previousCount, nextCount) {
     if (previousCount === 0 && nextCount >= 1) {
       this.emitter.connect(this.handlers);
@@ -459,27 +614,24 @@ export class EmitterPlug extends EmitterBase {
   }
 }
 
-
-
-
 // export type Matcher<T, R extends T> = {
 //         test: ((x: T) => x is R) | ((x: T) => boolean)
 //   }
-      
+
 //   export type When<T, V> = {
 //         is: <U extends T, W>(
 //           matcher: U,
 //           returnValue: ((inputValue: U) => W) | W
 //         ) => When<T, V | W>
-      
+
 //         match: <U extends T, W>(
 //           matcher: Matcher<T, U>,
 //           returnValue: ((inputValue: U) => W) | W
 //         ) => When<T, V | W>
-      
+
 //         else: <W>(returnValue: ((inputValue: T) => W) | W) => V | W
 //       }
-      
+
 //       /**
 //        * Exposes same API as `when`, but just propagates a resolved value,
 //        * without doing any further test.
@@ -489,7 +641,7 @@ export class EmitterPlug extends EmitterBase {
 //         match: () => resolve(resolvedValue),
 //         else: () => resolvedValue
 //       })
-      
+
 //       /**
 //        * Tests an object against multiple expressions.
 //        */
@@ -498,12 +650,12 @@ export class EmitterPlug extends EmitterBase {
 //           expr === constExpr
 //             ? resolve(typeof value === 'function' ? value(constExpr) : value)
 //             : when(expr),
-      
+
 //         match: (matcher, value) =>
 //           matcher.test(expr)
 //             ? resolve(typeof value === 'function' ? value(expr) : value)
 //             : when(expr),
-      
+
 //         else: defaultValue =>
 //           typeof defaultValue === 'function' ? defaultValue(expr) : defaultValue
 //   })
